@@ -174,7 +174,7 @@ createArrowFiles <- function(
     .logMessage("Cleaning Temporary Files", logFile = logFile)
     o <- .suppressAll(file.remove(list.files("tmp", pattern = ".arrow", full.names = TRUE)))
   }
-
+  
   #order inputFiles
   o <- tryCatch({
     order(file.info(inputFiles)$size, decreasing = TRUE)
@@ -193,6 +193,11 @@ createArrowFiles <- function(
   args$registryDir <- file.path(QCDir, "CreateArrowsRegistry")
   args$cleanTmp <- NULL
 
+  # Force verbose = FALSE if running in Jupyter
+  if(Sys.getenv("JPY_PARENT_PID") != "") {
+    args$verbose <- FALSE
+  }
+  
   if(subThreading){
     h5disableFileLocking()
   }else{
