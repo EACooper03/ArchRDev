@@ -1351,7 +1351,7 @@ createArrowFiles <- function(
   if(threads > 1){
 
     #Parallel Linkage Hdf5
-    .logDiffTime(sprintf("%s Parallel Hdf5 Linkage Temporary File", prefix), t1 = tstart, par_verbose = FALSE, logFile = logFile)
+    .logDiffTime(sprintf("%s Parallel Hdf5 Linkage Temporary File", prefix), t1 = tstart, verbose = FALSE, logFile = logFile)
 
     file.remove(tmpFile)
     o <- h5closeAll()
