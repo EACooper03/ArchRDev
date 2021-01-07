@@ -219,7 +219,7 @@ plotEmbedding <- function(
   logFile = createLogFile("plotEmbedding"),
   ...
   ){
-
+  
   .validInput(input = ArchRProj, name = "ArchRProj", valid = c("ArchRProj"))
   .validInput(input = embedding, name = "reducedDims", valid = c("character"))
   .validInput(input = colorBy, name = "colorBy", valid = c("character"))
@@ -711,6 +711,12 @@ plotGroups <- function(
   logFile = NULL
   ){
   
+  if(Sys.getenv("JPY_PARENT_PID") == "") {
+    par_verbose <- TRUE
+  } else {
+    par_verbose <- FALSE
+  }
+  
   o <- h5closeAll()
 
   .logMessage("Getting Matrix Values...", verbose = TRUE, logFile = logFile)
@@ -764,7 +770,9 @@ plotGroups <- function(
   cellNamesList <- split(rownames(getCellColData(ArchRProj)), getCellColData(ArchRProj)$Sample)
   
   values <- .safelapply(seq_along(cellNamesList), function(x){
-    message(x, " ", appendLF = FALSE)
+    if(par_verbose) {
+      message(x, " ", appendLF = FALSE)
+    }
     valuesx <- tryCatch({
       o <- h5closeAll()
       ArrowFile <- getSampleColData(ArchRProj)[names(cellNamesList)[x],"ArrowFiles"]
