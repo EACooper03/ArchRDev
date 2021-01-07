@@ -129,10 +129,16 @@ ArchRProject <- function(
   ArrowFiles <- unlist(lapply(ArrowFiles, .validArrow))
 
   message("Getting SampleNames...")
-  sampleNames <- unlist(.safelapply(seq_along(ArrowFiles), function(x){
-    message(x, " ", appendLF = FALSE)
-    .sampleName(ArrowFiles[x])
-  }, threads = threads))
+  if(Sys.getenv("JPY_PARENT_PID") == "") {
+    sampleNames <- unlist(.safelapply(seq_along(ArrowFiles), function(x){
+      message(x, " ", appendLF = FALSE)
+      .sampleName(ArrowFiles[x])
+    }, threads = threads))
+  } else {
+    sampleNames <- unlist(.safelapply(seq_along(ArrowFiles), function(x){
+      .sampleName(ArrowFiles[x])
+    }, threads = threads))
+  }
   message("")
 
   if(any(duplicated(sampleNames))){
