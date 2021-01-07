@@ -218,9 +218,6 @@ addGroupCoverages <- function(
   nCells <- lapply(seq_along(batchOut),function(x) batchOut[[x]]$nCells) %>% unlist
   nFragments <- lapply(seq_along(batchOut),function(x) batchOut[[x]]$nFragments) %>% unlist
 
-  #Enable Hdf5 File Locking
-  h5enableFileLocking()
-
   #Add To Project
   coverageMetadata <- DataFrame(
     Group = stringr::str_split(names(unlistGroups), pattern = "\\._.", simplify=TRUE)[,1],
@@ -244,6 +241,9 @@ addGroupCoverages <- function(
   )
 
   ArchRProj@projectMetadata$GroupCoverages[[groupBy]] <- SimpleList(Params = Params, coverageMetadata = coverageMetadata)
+
+  #Enable Hdf5 File Locking
+  h5enableFileLocking()
 
   .logDiffTime(sprintf("Finished Creation of Coverage Files!"), tstart, addHeader = FALSE)
   .endLogging(logFile = logFile)
@@ -671,7 +671,7 @@ addGroupCoverages <- function(
 .getCoverageMetadata <- function(ArchRProj = NULL, groupBy = NULL, useGroups = NULL, minCells = NULL){
   coverageMetadata <- ArchRProj@projectMetadata$GroupCoverages[[groupBy]]$coverageMetadata
   if(is.null(coverageMetadata)){
-    stop("No Coverage Metadata found for : ", groupBy)
+    stop("No Coverage Metadata found for : ", groupBy, ". Please run addGroupCoverages!")
   }
   if(!is.null(useGroups)){
     if(sum(coverageMetadata[,1] %in% useGroups) == 0){
