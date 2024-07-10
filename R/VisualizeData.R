@@ -225,7 +225,7 @@ plotEmbedding <- function(
   logFile = createLogFile("plotEmbedding"),
   ...
   ){
-
+  
   .validInput(input = ArchRProj, name = "ArchRProj", valid = c("ArchRProj"))
   .validInput(input = embedding, name = "reducedDims", valid = c("character"))
   .validInput(input = colorBy, name = "colorBy", valid = c("character"))
@@ -718,6 +718,12 @@ plotGroups <- function(
   threads = getArchRThreads(),
   logFile = NULL
   ){
+  
+  if(Sys.getenv("JPY_PARENT_PID") == "") {
+    par_verbose <- TRUE
+  } else {
+    par_verbose <- FALSE
+  }
   
   o <- h5closeAll()
 

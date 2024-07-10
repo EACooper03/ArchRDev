@@ -100,6 +100,7 @@ getMatches <- function(ArchRProj = NULL, name = NULL, annoName = NULL){
 #' 
 #' @param ArchRProj An `ArchRProject` object.
 #' @param regions A named `list` of `GRanges` that are to be overlapped with the `peakSet` in the `ArchRProject`.
+#' @param regions A named `list` of `GRanges` that are to be overlapped with the `peakSet` in the `ArchRProject`.
 #' @param name The name of `peakAnnotation` object to be stored as in `ArchRProject`.
 #' @param force A boolean value indicating whether to force the `peakAnnotation` object indicated by `name` to be overwritten
 #' if it already exists in the given `ArchRProject`.
@@ -506,6 +507,9 @@ addMotifAnnotations <- function(
   if(is.null(peakSet)){
     .logStop("peakSet is NULL. You need a peakset to run addMotifAnnotations! See addReproduciblePeakSet!", logFile = logFile)
   }
+  if(is.null(peakSet)){
+    .logStop("peakSet is NULL. You need a peakset to run addMotifAnnotations! See addReproduciblePeakSet!", logFile = logFile)
+  }
   motifPositions <- motifmatchr::matchMotifs(
       pwms = motifs,
       subject = peakSet,
@@ -794,6 +798,9 @@ addArchRAnnotations <- function(
   # Peak Overlap Matrix
   #############################################################
   peakSet <- getPeakSet(ArchRProj)
+  if(is.null(peakSet)){
+    .logStop("peakSet is NULL. You need a peakset to run addMotifAnnotations! See addReproduciblePeakSet!", logFile = logFile)
+  }
   if(is.null(peakSet)){
     .logStop("peakSet is NULL. You need a peakset to run addMotifAnnotations! See addReproduciblePeakSet!", logFile = logFile)
   }

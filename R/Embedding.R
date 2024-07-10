@@ -209,6 +209,15 @@ addUMAP <- function(
 
 #New Save UWOT
 .saveUWOT <- function(model, file){
+  tryCatch({
+    uwot::save_uwot(model = model, file = file, verbose = TRUE)
+  }, error = function(e){
+    .saveUWOT_Deprecated(model = model, file = file) #backwards to previous version
+  })
+}
+
+#New Save UWOT
+.saveUWOT <- function(model, file){
 
   #save_uwot does not work because tarring doesnt work for some reason on Stanford's compute server
   #Adapted from save_uwot

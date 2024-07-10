@@ -183,7 +183,7 @@ createArrowFiles <- function(
     .logMessage("Cleaning Temporary Files", logFile = logFile)
     o <- .suppressAll(file.remove(list.files("tmp", pattern = ".arrow", full.names = TRUE)))
   }
-
+  
   #order inputFiles
   o <- tryCatch({
     order(file.info(inputFiles)$size, decreasing = TRUE)
@@ -202,6 +202,11 @@ createArrowFiles <- function(
   args$registryDir <- file.path(QCDir, "CreateArrowsRegistry")
   args$cleanTmp <- NULL
 
+  # Force verbose = FALSE if running in Jupyter
+  if(Sys.getenv("JPY_PARENT_PID") != "") {
+    args$verbose <- FALSE
+  }
+  
   if(subThreading){
     h5disableFileLocking()
   }else{
@@ -1181,6 +1186,12 @@ createArrowFiles <- function(
   threads = 1,
   logFile = NULL
   ){
+  
+  if(Sys.getenv("JPY_PARENT_PID") == "") {
+    par_verbose <- verbose
+  } else {
+    par_verbose <- FALSE
+  }
 
   .requirePackage("Rsamtools", source = "bioc")
 
@@ -1207,7 +1218,7 @@ createArrowFiles <- function(
   mcols(tileChromSizes)$chunkName <- paste0(seqnames(tileChromSizes),"#chunk",seq_along(tileChromSizes))
 
   .logThis(tileChromSizes, name = "tileChromSizes", logFile = logFile)
-
+  
   readTiledChrom <- .safelapply(seq_along(tileChromSizes), function(x){
 
     tryCatch({
@@ -1222,7 +1233,7 @@ createArrowFiles <- function(
       }else{
         if(x %% (2 * threads + 1) == 0){
           .logDiffTime(sprintf("%s Reading TabixFile %s Percent", prefix, round(100*x/length(tileChromSizes)),3), t1 = tstart, 
-                    verbose = verbose, logFile = logFile)
+                    verbose = par_verbose, logFile = logFile)
         }
       }
 
@@ -1247,7 +1258,7 @@ createArrowFiles <- function(
         })
 
         if(!is.null(dt)){
-          .logMessage(msg = paste0(prefix, " found fragments when removed chromosome prefix : ", paste0(tileChromSizes[x])), logFile = logFile)          
+          .logMessage(msg = paste0(prefix, " found fragments when removed chromosome prefix : ", paste0(tileChromSizes[x])), logFile = logFile, verbose = par_verbose)          
         }
 
       }
@@ -1445,6 +1456,11 @@ createArrowFiles <- function(
   logFile = NULL
   ){
 
+  if(Sys.getenv("JPY_PARENT_PID") == "") {
+    par_verbose <- verbose
+  } else {
+    par_verbose <- FALSE
+  }
   .requirePackage("Rsamtools", source = "bioc")
 
   #######################################################################################################
@@ -1494,7 +1510,7 @@ createArrowFiles <- function(
       }else{
         if(x %% (2 * threads + 1) == 0){
           .logDiffTime(sprintf("%s Reading BamFile %s Percent", prefix, round(100*x/length(tileChromSizes)),3), t1 = tstart, 
-                    verbose = verbose)
+                    verbose = par_verbose)
         }
       }
 
@@ -1557,7 +1573,7 @@ createArrowFiles <- function(
           })
 
           if(!is.null(dt)){
-            .logMessage(msg = paste0(prefix, " found fragments when removed chromosome prefix : ", paste0(tileChromSizes[x])), logFile = logFile)          
+            .logMessage(msg = paste0(prefix, " found fragments when removed chromosome prefix : ", paste0(tileChromSizes[x])), logFile = logFile, verbose = par_verbose)          
           }          
 
         }
@@ -1621,7 +1637,7 @@ createArrowFiles <- function(
           })
 
           if(!is.null(dt)){
-            .logMessage(msg = paste0(prefix, " found fragments when removed chromosome prefix : ", paste0(tileChromSizes[x])), logFile = logFile)          
+            .logMessage(msg = paste0(prefix, " found fragments when removed chromosome prefix : ", paste0(tileChromSizes[x])), logFile = logFile, verbose = par_verbose)          
           }
 
         }
@@ -1826,6 +1842,12 @@ createArrowFiles <- function(
   logFile = NULL
   ){
 
+  if(Sys.getenv("JPY_PARENT_PID") == "") {
+    par_verbose <- verbose
+  } else {
+    par_verbose <- FALSE
+  }
+  
   if(!removeFilteredCells){
     threads <- 1 #there wont be a later filter step so we wont be linking here!
   }
@@ -1920,7 +1942,7 @@ createArrowFiles <- function(
 
         if(length(ix) == 0){
 
-          .logMessage(msg = paste0(prefix, " detected 0 Fragments for ", chr), logFile = logFile)
+          .logMessage(msg = paste0(prefix, " detected 0 Fragments for ", chr), logFile = logFile, verbose = par_verbose)
 
           #HDF5 Write length 0
           chrPos <- paste0("Fragments/",chr,"/Ranges")
@@ -2168,7 +2190,7 @@ createArrowFiles <- function(
   verbose = TRUE,
   tstart = NULL
   ){
-
+  
   if(is.null(tstart)){
     tstart <- Sys.time()
   }
