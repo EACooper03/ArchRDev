@@ -412,7 +412,7 @@ addFragmentMatrix <- function(
   force = TRUE,
   logFile = createLogFile("addFragmentMatrix")
   ){
-
+  features = NULL
   .validInput(input = ArchRProj, name = "ArchRProj", valid = c("ArchRProj"))
   .validInput(input = ceiling, name = "ceiling", valid = c("numeric"))
   .validInput(input = features, name = "features", valid = c("GRanges", "null"))
@@ -421,7 +421,7 @@ addFragmentMatrix <- function(
   .validInput(input = parallelParam, name = "parallelParam", valid = c("parallelparam", "null"))
   .validInput(input = force, name = "force", valid = c("boolean"))
   .validInput(input = logFile, name = "logFile", valid = c("character"))
-
+   
   binarize = FALSE
   if(is.null(ArchRProj@peakSet) & all(is.null(features))){
     stop("No peakSet found in ArchRProject, and no regions were provided for counting!")
