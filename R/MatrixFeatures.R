@@ -403,7 +403,7 @@ addPeakMatrix <- function(
 #' @export
 addFragmentMatrix <- function(
   ArchRProj = NULL,
-  features = NULL,
+  #features = NULL, This only works with the internal peakset currently. 
   matrixName = 'FragmentMatrix',
   ceiling = 500, 
   verbose = TRUE,

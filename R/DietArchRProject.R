@@ -22,10 +22,11 @@ DietArchRProject <- function(ArchRProj = NULL, keep = "TileMatrix", verbose = FA
 		allMatrices <- getAvailableMatrices(ArchRProj)
 		for(i in 1:length(allMatrices)){
 			if(!allMatrices[i] %in% keep){
-				dropGroupsFromProject(ArchRProj, dropGroups = allMatrices[i], verbose = verbose)
+				.dropGroupsFromProject(ArchRProj, dropGroups = allMatrices[i], verbose = verbose)
 			}
 		}
 	}
+    
 	return(ArchRProj)
 }
 

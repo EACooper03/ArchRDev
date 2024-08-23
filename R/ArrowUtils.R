@@ -249,7 +249,7 @@
   o <- h5createFile(outArrow)
   o <- h5write(obj = "Arrow", file = outArrow, name = "Class")
   o <- h5write(obj = paste0(packageVersion("ArchR")), file = outArrow, name = "ArchRVersion")
-
+    
   #1. Metadata First
   .logMessage(".dropGroupsFromArrow : Adding Metadata to Temp ArrowFile", logFile = logFile)
   groupName <- "Metadata"
